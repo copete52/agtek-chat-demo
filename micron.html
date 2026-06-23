@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products | Micron Technology</title>
+  <link rel="stylesheet" href="./src/styles/admin.css" />
+  <style>
+    :root {
+      --m-magenta:     #c11f8d;
+      --m-magenta-dk:  #9a1870;
+      --m-black:       #0a0a0a;
+      --m-nav-bg:      #1a1a1a;
+      --m-text:        #1a1a1a;
+      --m-text-muted:  #555;
+      --m-bg:          #ffffff;
+      --m-bg-alt:      #f4f4f4;
+      --m-border:      #e0e0e0;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      color: var(--m-text);
+      background: var(--m-bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--m-magenta); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ═══════════════════════════════════════════
+       UTILITY BAR
+    ═══════════════════════════════════════════ */
+    .utility-bar {
+      background: var(--m-nav-bg);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .utility-bar-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 36px;
+    }
+    .utility-links { display: flex; gap: 0; }
+    .utility-link {
+      font-size: 12px; color: rgba(255,255,255,0.7);
+      text-decoration: none; padding: 0 14px; height: 36px;
+      display: flex; align-items: center;
+      transition: color 0.15s;
+    }
+    .utility-link:hover { color: #fff; text-decoration: none; }
+    .utility-right { display: flex; align-items: center; gap: 16px; }
+    .utility-signin {
+      font-size: 12px; color: rgba(255,255,255,0.7);
+      text-decoration: none; display: flex; align-items: center; gap: 5px;
+      transition: color 0.15s;
+    }
+    .utility-signin:hover { color: #fff; text-decoration: none; }
+    .utility-signin svg { width: 14px; height: 14px; fill: currentColor; }
+    .utility-globe svg { width: 14px; height: 14px; fill: rgba(255,255,255,0.6); }
+
+    /* ═══════════════════════════════════════════
+       MAIN NAV
+    ═══════════════════════════════════════════ */
+    .main-nav {
+      background: #fff;
+      border-bottom: 1px solid var(--m-border);
+      position: sticky; top: 0; z-index: 500;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .main-nav-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center;
+      padding: 0 24px; height: 56px; gap: 0;
+    }
+    .nav-logo {
+      margin-right: 40px; flex-shrink: 0; text-decoration: none;
+      display: flex; align-items: center;
+    }
+    .nav-logo img { height: 24px; }
+    .nav-logo-text {
+      font-size: 20px; font-weight: 700; color: #1a1a1a;
+      letter-spacing: -0.5px; font-style: italic;
+    }
+    .nav-logo-text span { color: var(--m-magenta); }
+    .nav-links { display: flex; align-items: stretch; height: 56px; list-style: none; flex: 1; }
+    .nav-link {
+      display: flex; align-items: center;
+      padding: 0 16px; font-size: 14px; font-weight: 500; color: #1a1a1a;
+      text-decoration: none; border-bottom: 3px solid transparent;
+      transition: color 0.15s, border-color 0.15s; white-space: nowrap;
+      height: 56px;
+    }
+    .nav-link:hover { color: var(--m-magenta); text-decoration: none; border-bottom-color: var(--m-magenta); }
+    .nav-link.active { color: var(--m-magenta); border-bottom-color: var(--m-magenta); }
+    .nav-search {
+      margin-left: auto; display: flex; align-items: center;
+      border: 1px solid var(--m-border); border-radius: 4px;
+      padding: 0 10px; height: 34px; gap: 6px; width: 180px;
+    }
+    .nav-search svg { width: 16px; height: 16px; fill: #999; flex-shrink: 0; }
+    .nav-search input {
+      border: none; outline: none; font-size: 13px; color: #333;
+      background: transparent; width: 100%;
+    }
+
+    /* Admin toggle */
+    .admin-toggle-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 0 10px; height: 28px; margin-left: 12px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+      color: #999; border: 1px solid #ddd; border-radius: 3px;
+      background: none; cursor: pointer; font-family: inherit; transition: all 0.15s;
+    }
+    .admin-toggle-btn:hover { color: #333; border-color: #999; }
+    .admin-toggle-btn svg { width: 12px; height: 12px; fill: currentColor; }
+
+    /* ═══════════════════════════════════════════
+       BREADCRUMB
+    ═══════════════════════════════════════════ */
+    .breadcrumb {
+      background: #fff; padding: 10px 24px;
+      border-bottom: 1px solid var(--m-border);
+    }
+    .breadcrumb-inner { max-width: 1280px; margin: 0 auto; }
+    .breadcrumb a, .breadcrumb span {
+      font-size: 12px; color: #666; text-decoration: none;
+    }
+    .breadcrumb a:hover { color: var(--m-magenta); }
+    .breadcrumb .sep { margin: 0 6px; color: #bbb; }
+    .breadcrumb .current { color: #333; font-weight: 500; }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    .hero {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      min-height: 340px;
+      background: #111;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .hero-wrap {
+      background: #111;
+    }
+    .hero-text {
+      background: #111; color: #fff;
+      padding: 56px 48px 56px 80px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.6);
+      margin-bottom: 18px;
+    }
+    .hero-title {
+      font-size: 34px; font-weight: 700; line-height: 1.15;
+      margin-bottom: 20px; color: #fff;
+    }
+    .hero-desc {
+      font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.75);
+    }
+    .hero-img {
+      overflow: hidden;
+    }
+    .hero-img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    /* ═══════════════════════════════════════════
+       PRODUCT CARDS
+    ═══════════════════════════════════════════ */
+    .products-section {
+      background: var(--m-bg-alt); padding: 48px 24px;
+    }
+    .products-inner { max-width: 1280px; margin: 0 auto; }
+    .product-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .product-card {
+      background: #fff; border-radius: 12px; overflow: hidden;
+      border: 1px solid #e8e8e8;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .product-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.10); transform: translateY(-3px); }
+    .product-card-img {
+      width: 100%; height: 220px; overflow: hidden;
+      background: #f8f8f8;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .product-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .product-card-body { padding: 28px; }
+    .product-card-title {
+      font-size: 22px; font-weight: 700; color: #111; margin-bottom: 12px;
+    }
+    .product-card-desc {
+      font-size: 14px; color: #555; line-height: 1.65; margin-bottom: 20px;
+    }
+    .product-card-link {
+      font-size: 14px; font-weight: 600; color: var(--m-magenta);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .product-card-link:hover { text-decoration: underline; }
+    .product-card-link::after { content: '→'; }
+
+    /* ═══════════════════════════════════════════
+       PRESS RELEASE BANNER
+    ═══════════════════════════════════════════ */
+    .press-banner {
+      background: linear-gradient(135deg, #1a1a3e 0%, #0d1f3c 40%, #051229 100%);
+      padding: 56px 24px; text-align: center; color: #fff;
+    }
+    .press-banner h2 {
+      font-size: 32px; font-weight: 700; margin-bottom: 14px; line-height: 1.2;
+    }
+    .press-banner p {
+      font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 28px; max-width: 560px; margin-left: auto; margin-right: auto;
+    }
+    .btn-outline-white {
+      display: inline-flex; align-items: center;
+      padding: 12px 28px; border: 2px solid #fff; border-radius: 50px;
+      font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: #fff; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-outline-white:hover { background: #fff; color: #111; text-decoration: none; }
+
+    /* ═══════════════════════════════════════════
+       RESOURCES & DOCUMENTATION
+    ═══════════════════════════════════════════ */
+    .resources-section { background: #fff; padding: 56px 24px; }
+    .resources-inner { max-width: 1280px; margin: 0 auto; }
+    .resources-title {
+      font-size: 26px; font-weight: 700; color: #111; margin-bottom: 36px;
+    }
+    .resources-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    }
+    .resource-col h3 {
+      font-size: 15px; font-weight: 700; color: #111; margin-bottom: 8px;
+    }
+    .resource-col p {
+      font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 12px;
+    }
+    .resource-link {
+      font-size: 13px; font-weight: 600; color: var(--m-magenta);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .resource-link:hover { text-decoration: underline; }
+    .resource-link::after { content: '→'; }
+
+    /* ═══════════════════════════════════════════
+       DESIGN TOOLS
+    ═══════════════════════════════════════════ */
+    .tools-section { background: #fff; padding: 56px 24px; border-top: 1px solid var(--m-border); }
+    .tools-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 480px; gap: 80px; align-items: center;
+    }
+    .tools-text h2 { font-size: 28px; font-weight: 700; color: #111; margin-bottom: 12px; }
+    .tools-text > p { font-size: 14px; color: #555; line-height: 1.65; margin-bottom: 28px; }
+    .tools-list {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      list-style: none; margin-bottom: 32px;
+    }
+    .tools-list li a {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 14px; color: var(--m-magenta); text-decoration: none;
+      padding: 7px 0; border-bottom: 1px solid #f0f0f0;
+      transition: color 0.15s;
+    }
+    .tools-list li a:hover { color: var(--m-magenta-dk); text-decoration: underline; }
+    .tools-list li a::before { content: '•'; font-size: 16px; }
+    .btn-outline-dark {
+      display: inline-flex; align-items: center;
+      padding: 11px 28px; border: 2px solid #111; border-radius: 50px;
+      font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: #111; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-outline-dark:hover { background: #111; color: #fff; text-decoration: none; }
+    .tools-img { border-radius: 12px; overflow: hidden; }
+    .tools-img img { width: 100%; display: block; border-radius: 12px; }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .footer { background: #111; color: rgba(255,255,255,0.65); padding: 56px 24px 0; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px;
+      padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-col-head {
+      font-size: 13px; font-weight: 700; color: #fff;
+      margin-bottom: 16px;
+    }
+    .footer-link {
+      display: block; font-size: 13px; color: rgba(255,255,255,0.6);
+      text-decoration: none; margin-bottom: 10px; line-height: 1.4;
+      transition: color 0.15s;
+    }
+    .footer-link:hover { color: var(--m-magenta); text-decoration: none; }
+    .footer-bottom {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 0; gap: 16px; flex-wrap: wrap;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 12px; }
+    .footer-logo img { height: 28px; }
+    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-legal a { font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none; }
+    .footer-legal a:hover { color: rgba(255,255,255,0.7); }
+    .footer-social { display: flex; gap: 12px; }
+    .footer-social a {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none;
+      transition: all 0.15s;
+    }
+    .footer-social a:hover { border-color: var(--m-magenta); color: var(--m-magenta); text-decoration: none; }
+    .footer-copyright {
+      font-size: 11px; color: rgba(255,255,255,0.3);
+      padding: 0 0 20px; line-height: 1.6; max-width: 1280px; margin: 0 auto;
+    }
+
+    /* Admin panel */
+    #admin-panel-container {
+      display: none; position: fixed;
+      top: 70px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 48px); max-width: 960px;
+      z-index: 9999; animation: admin-slide-in 0.3s ease;
+    }
+    @keyframes admin-slide-in {
+      from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    #admin-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 9998; backdrop-filter: blur(2px);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-img { height: 280px; }
+      .product-grid { grid-template-columns: 1fr; }
+      .resources-grid { grid-template-columns: repeat(2, 1fr); }
+      .tools-inner { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .utility-bar { display: none; }
+      .resources-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       UTILITY BAR
+  ══════════════════════════════════════════ -->
+  <div class="utility-bar">
+    <div class="utility-bar-inner">
+      <div class="utility-links">
+        <a href="#" class="utility-link">AI</a>
+        <a href="#" class="utility-link">Design Tools</a>
+        <a href="#" class="utility-link">Blog</a>
+        <a href="#" class="utility-link">Investors</a>
+        <a href="#" class="utility-link">Careers</a>
+      </div>
+      <div class="utility-right">
+        <a href="#" class="utility-globe">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </a>
+        <a href="#" class="utility-signin">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          Sign In
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MAIN NAV
+  ══════════════════════════════════════════ -->
+  <nav class="main-nav">
+    <div class="main-nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:652506f6-3869-4e9b-a1bd-d5b4209f850c/as/Micron-logo-white.svg?preferwebp=true"
+             alt="Micron"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span class="nav-logo-text" style="display:none"><em>micron</em><span>.</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link active">Products</a></li>
+        <li><a href="#" class="nav-link">Market &amp; Industries</a></li>
+        <li><a href="#" class="nav-link">Partners</a></li>
+        <li><a href="#" class="nav-link">Sales &amp; Support</a></li>
+        <li><a href="#" class="nav-link">About</a></li>
+      </ul>
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" placeholder="Search">
+      </div>
+      <button class="admin-toggle-btn" id="admin-toggle" title="Open Admin Panel">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/></svg>
+        Admin
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       BREADCRUMB
+  ══════════════════════════════════════════ -->
+  <div class="breadcrumb">
+    <div class="breadcrumb-inner">
+      <a href="#">Home</a>
+      <span class="sep">›</span>
+      <span class="current">Products</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════ -->
+  <div class="hero-wrap">
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Products</div>
+      <h1 class="hero-title">Micron product innovation enable new experiences</h1>
+      <p class="hero-desc">Micron products and technologies help solve some of the world's biggest challenges and enable never-before-imagined use cases and experiences. With leadership in core node and process technology, advanced manufacturing and operational excellence, Micron provides leading memory and storage innovation to enable breakthrough customer solutions.</p>
+    </div>
+    <div class="hero-img">
+      <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:58de215a-08d0-43f3-9c38-331cd3c731d7/as/20250404-wafer-manufacturing-pink-light-tertiary.jpg?preferwebp=true"
+           alt="Micron wafer manufacturing">
+    </div>
+  </section>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PRODUCT CARDS
+  ══════════════════════════════════════════ -->
+  <section class="products-section">
+    <div class="products-inner">
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:916bbd88-7aed-4290-9d01-fdb330e1ea32/as/product-ddr5-rdimm-group-crop-right-gray.jpg?width=640&preferwebp=true"
+                 alt="Micron DDR5 RDIMM Memory">
+          </div>
+          <div class="product-card-body">
+            <h2 class="product-card-title">Memory</h2>
+            <p class="product-card-desc">Micron DRAM solutions come with the performance leap you get only from a technology leader. Find the best memory components to fit your project.</p>
+            <a href="#" class="product-card-link">View Micron memory</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:be9da3a0-74e1-4bf1-b0df-4a60194e94d4/as/product-7600-ssd-group-gray.jpg?width=640&preferwebp=true"
+                 alt="Micron 7800 SSD Storage">
+          </div>
+          <div class="product-card-body">
+            <h2 class="product-card-title">Storage</h2>
+            <p class="product-card-desc">Our proven flash-based SSDs are purpose-built to optimize and scale storage designs across a broad range of environments, applications and workloads.</p>
+            <a href="#" class="product-card-link">View Micron storage</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:578a7a0c-3d80-448a-ace1-84efc7bcb7ab/as/product-emmc-51-front-back-right-gray.jpg?width=640&preferwebp=true"
+                 alt="Micron e.MMC 5.1 Multichip Package">
+          </div>
+          <div class="product-card-body">
+            <h2 class="product-card-title">Multichip packages</h2>
+            <p class="product-card-desc">Whether you're trying to minimize power consumption, maximize density, increase speed, or do everything at once, Micron's MCPs can drive your design.</p>
+            <a href="#" class="product-card-link">View multichip packages</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       PRESS RELEASE BANNER
+  ══════════════════════════════════════════ -->
+  <div class="press-banner">
+    <h2>Accelerating data center architecture capability</h2>
+    <p>Micron updates data center portfolio strategy to address growing opportunity for memory and storage hierarchy innovation.</p>
+    <a href="#" class="btn-outline-white">Read Press Release</a>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       RESOURCES & DOCUMENTATION
+  ══════════════════════════════════════════ -->
+  <section class="resources-section">
+    <div class="resources-inner">
+      <h2 class="resources-title">Resources &amp; documentation</h2>
+      <div class="resources-grid">
+        <div class="resource-col">
+          <h3>Micron Product FAQs</h3>
+          <p>Find answers to frequently asked questions about Micron's memory and storage products.</p>
+          <a href="#" class="resource-link">Visit FAQs</a>
+        </div>
+        <div class="resource-col">
+          <h3>Product lifecycle solutions</h3>
+          <p>Find out more about Micron's product longevity program.</p>
+          <a href="#" class="resource-link">Learn more</a>
+        </div>
+        <div class="resource-col">
+          <h3>Sales support</h3>
+          <p>Find sales resources.</p>
+          <a href="#" class="resource-link">Visit sales support</a>
+        </div>
+        <div class="resource-col">
+          <h3>Search all resources and documentation</h3>
+          <p>&nbsp;</p>
+          <a href="#" class="resource-link">Search all</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       DESIGN TOOLS
+  ══════════════════════════════════════════ -->
+  <section class="tools-section">
+    <div class="tools-inner">
+      <div class="tools-text">
+        <h2>Design tools</h2>
+        <p>Your single source for tools and resources needed to maximize Micron's products and solutions for your design needs.</p>
+        <ul class="tools-list">
+          <li><a href="#">FBGA and part decoder</a></li>
+          <li><a href="#">Cross-reference tools</a></li>
+          <li><a href="#">DRAM power calculators</a></li>
+          <li><a href="#">UFSparm</a></li>
+          <li><a href="#">NAND power calculator</a></li>
+          <li><a href="#">SSD firmware</a></li>
+          <li><a href="#">Simulation models</a></li>
+          <li><a href="#">Software and drivers</a></li>
+          <li><a href="#">Chipset compatibility guides</a></li>
+          <li><a href="#">Storage Executive software</a></li>
+          <li><a href="#">SPD part number lookup</a></li>
+          <li><a href="#">Obsolete part catalogs</a></li>
+        </ul>
+        <a href="#" class="btn-outline-dark">View All Design Tools</a>
+      </div>
+      <div class="tools-img">
+        <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:1bfcc335-5a34-4c0e-82df-272bf2d0f797/as/1404883648-high-tech-user-interface-screen.jpg?width=640&preferwebp=true"
+             alt="Design tools interface">
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-col-head">Products</div>
+          <a href="#" class="footer-link">Memory</a>
+          <a href="#" class="footer-link">Storage</a>
+          <a href="#" class="footer-link">Multichip packages</a>
+          <a href="#" class="footer-link">Technology leadership</a>
+          <a href="#" class="footer-link">Design tools</a>
+        </div>
+        <div>
+          <div class="footer-col-head">Markets &amp; Industries</div>
+          <a href="#" class="footer-link">AI</a>
+          <a href="#" class="footer-link">Automotive</a>
+          <a href="#" class="footer-link">Client PC</a>
+          <a href="#" class="footer-link">Consumer</a>
+          <a href="#" class="footer-link">Data center and servers</a>
+          <a href="#" class="footer-link">Industrial IoT</a>
+          <a href="#" class="footer-link">Mobile</a>
+          <a href="#" class="footer-link">Network infrastructure</a>
+        </div>
+        <div>
+          <div class="footer-col-head">Partners</div>
+          <a href="#" class="footer-link">Partners overview</a>
+          <a href="#" class="footer-link">Partner networks</a>
+          <a href="#" class="footer-link">Technology enablement programs</a>
+          <a href="#" class="footer-link">Become a partner</a>
+          <a href="#" class="footer-link">Partner login</a>
+          <a href="#" class="footer-link">Sales network</a>
+        </div>
+        <div>
+          <div class="footer-col-head">Sales &amp; Support</div>
+          <a href="#" class="footer-link">Sales and support overview</a>
+          <a href="#" class="footer-link">Customer support</a>
+          <a href="#" class="footer-link">Sales</a>
+          <a href="#" class="footer-link">Downloads and technical documentation</a>
+        </div>
+        <div>
+          <div class="footer-col-head">About</div>
+          <a href="#" class="footer-link">About overview</a>
+          <a href="#" class="footer-link">Company</a>
+          <a href="#" class="footer-link">Corporate governance</a>
+          <a href="#" class="footer-link">Micron blog</a>
+          <a href="#" class="footer-link">Events</a>
+          <a href="#" class="footer-link">U.S. expansion</a>
+        </div>
+        <div>
+          <div class="footer-col-head">Investor Relations</div>
+          <a href="#" class="footer-link">IR home</a>
+          <a href="#" class="footer-link">Events and presentations</a>
+          <a href="#" class="footer-link">Latest news</a>
+          <a href="#" class="footer-link">Quarterly financial results</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo">
+        <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:bbc82cff-27c5-4e1c-9c01-cd41034a38d5/as/icon-footer-micron-m.png?preferwebp=true"
+             alt="Micron M"
+             onerror="this.style.display='none'">
+        <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:652506f6-3869-4e9b-a1bd-d5b4209f850c/as/Micron-logo-white.svg?preferwebp=true"
+             alt="Micron"
+             onerror="this.style.display='none'">
+      </div>
+      <div class="footer-legal">
+        <a href="#">Legal</a>
+        <a href="#">Micron Privacy Notice</a>
+        <a href="#">Terms of sale</a>
+        <a href="#">Privacy choices</a>
+      </div>
+      <div class="footer-social">
+        <a href="#" title="X / Twitter">𝕏</a>
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="LinkedIn">in</a>
+        <a href="#" title="YouTube">▶</a>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      ©2025 Micron Technology, Inc. All rights reserved. Information, products and/or specifications are subject to change without notice. All information is provided on an "AS IS" basis without warranties of any kind. Drawings may not be to scale. Micron, the Micron logo and all other Micron trademarks are the property of Micron Technology, Inc. All other trademarks are the property of their respective owners.
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════
+       ADMIN PANEL + KRE WIDGET
+  ══════════════════════════════════════════ -->
+  <div id="admin-backdrop"></div>
+  <div id="admin-panel-container"></div>
+  <div id="kre-widget-container"></div>
+
+  <script type="module">
+    import { KRERuntime } from './src/kre-runtime.js';
+    import { AdminPanel } from './src/components/admin-panel.js';
+
+    const micronSettings = {
+      brandName:        'Micron',
+      headerTitle:      'Micron AI Assistant',
+      headerStatus:     'Online · AI Assistant',
+      welcomeHeading:   'Hi there!',
+      welcomeMessage:   "I'm your Micron memory and storage specialist. Ask me about HBM, DRAM, SSDs, NAND flash, or finding the right product for your design.",
+      inputPlaceholder: 'Ask about Micron products…',
+      footerText:       'Powered by <strong>PathFactory</strong> + <strong>Kaltura AI</strong>',
+      bookBtnLabel:     'Talk to a Specialist',
+      bookBtnSubtext:   'Schedule with a Micron expert',
+      avatarBtnLabel:   'Chat with virtual agent',
+      avatarBtnSubtext: 'Start a voice conversation',
+      avatarViewTitle:  'Chat with Micron AI Agent',
+      escalationText:   "It looks like you're evaluating Micron solutions for a design. Would you like to connect with a product specialist?",
+      escalationLabel:  'Ready for you',
+      starterQ1:        'What makes the Micron 9650 SSD the right choice for AI workloads?',
+      starterQ2:        'How does the Micron 7600 SSD perform in data center environments?',
+      starterQ3:        'What is the 6600 ION SSD and what workloads is it designed for?',
+      starterQ4:        'Tell me about the Micron 4600 client SSD',
+      avatarChip1:      'Tell me about the Micron 9650 SSD',
+      avatarChip2:      'How does the 7600 compare to the 9650?',
+      avatarChip3:      'What data center SSDs does Micron offer?',
+      primaryColor:     '#c11f8d',
+      genieKs:          'djJ8NjUxMDA5Mnw0kSt6mAOZz-TAXrJibnfQYCINkqe3JIMrwfiaOK6D49AjzIwhpeHHlQ1Mk-jLKAX9q8qYLG-Ow08Wm_53Xk-JOiJJbxUqz0TfWL7LyqOPLBwrBptY71ikvTQnO05--PbTMKb8kKtlKhm0JS-G-ab9Tikaw8wR6kSh1rbU8jLMEgX7YHGke3w0hH04Vqpr6K3cPKBLZlpJJUs8if6tL29_XczDDAkGH28_0jAVqJUP5qi9jCxHWaweSr2a2TCUBz36nmYTLSj0DUTi9ZoEHbZzh5dj6jEIdSunE0B8ntyDyvvA5ESZTHoOS0BwmvhOR6HdS92ojOyayIjygICUVTbcHJw2qIdfJawjoRSZSNLXvw==',
+      geniePartnerId:   '6510092',
+      playerPartnerId:  '6510092',
+      playerUiconfId:   '57983212',
+    };
+
+    const kre = new KRERuntime({ target: 'kre-widget-container', settings: micronSettings });
+    kre.mount('kre-widget-container');
+
+    const adminContainer = document.getElementById('admin-panel-container');
+    const adminBackdrop  = document.getElementById('admin-backdrop');
+    const admin = new AdminPanel({ settings: kre._settings });
+    admin.mount(adminContainer);
+
+    document.getElementById('admin-toggle').addEventListener('click', () => {
+      admin.toggle();
+      const isVisible = adminContainer.style.display !== 'none';
+      adminBackdrop.style.display = isVisible ? 'none' : 'block';
+    });
+    adminBackdrop.addEventListener('click', () => {
+      admin.toggle();
+      adminBackdrop.style.display = 'none';
+    });
+
+    const host = document.getElementById('kre-widget-container');
+    host.addEventListener('kre:livedata',          (e) => admin.updateLiveData(e.detail));
+    host.addEventListener('kre:ready',             () => console.log('[Micron KRE] Backend connected'));
+    host.addEventListener('kre:error',             (e) => console.error('[Micron KRE] Error:', e.detail));
+    host.addEventListener('kre:booking:confirmed', (e) => console.log('[Micron KRE] Booking:', e.detail));
+
+    window.__KRE_INSTANCE__ = kre;
+    window.__KRE_ADMIN__    = admin;
+  </script>
+</body>
+</html>

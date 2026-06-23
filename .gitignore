@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.env.local
+
+# Claude settings
+.claude/
+
+# HPE reference files — not for deployment
+index.html
+micron-real.html
+PageSample/
+
+# Old HPE images
+images/hpe-avatar-icon.png
