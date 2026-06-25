@@ -42,7 +42,7 @@ const KRE_DEFAULTS = {
   groqApiKey: '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',
   // Avatar (Kaltura Avatar SDK — clientId + flowId auth, no KS needed)
   avatarClientId: '6931df33dd072609137dfe46',
-  avatarFlowId: 'agent-41',
+  avatarFlowId: 'agent-43',
   // Genie — 1-year KS, expires April 2027
   /*
   genieKs: 'Y2U1NmNmMmQwOGE4ZWU2NjQ0MGRmMzg0YzIyM2Y5ZGM1ZWRlNTFmMHw4MTE0NDE7ODExNDQxOzE4MDgyODkzODg7MDsxNzc2NzUzMzg4LjIxNzY7MDtzdmlldzoqLGdlbmllaWQ6MzgxNzg1NjkyLHNldHJvbGU6UExBWUJBQ0tfQkFTRV9ST0xFLHdpZGdldDoxOzs=',
@@ -51,8 +51,8 @@ const KRE_DEFAULTS = {
   playerUiconfId: '55937762',
   */
   
-  // Genie for Micron — 1-year KS, expires June 2027, geniegpcid:2071
-  genieKs: 'djJ8NjUxMDA5Mnw0kSt6mAOZz-TAXrJibnfQYCINkqe3JIMrwfiaOK6D49AjzIwhpeHHlQ1Mk-jLKAX9q8qYLG-Ow08Wm_53Xk-JOiJJbxUqz0TfWL7LyqOPLBwrBptY71ikvTQnO05--PbTMKb8kKtlKhm0JS-G-ab9Tikaw8wR6kSh1rbU8jLMEgX7YHGke3w0hH04Vqpr6K3cPKBLZlpJJUs8if6tL29_XczDDAkGH28_0jAVqJUP5qi9jCxHWaweSr2a2TCUBz36nmYTLSj0DUTi9ZoEHbZzh5dj6jEIdSunE0B8ntyDyvvA5ESZTHoOS0BwmvhOR6HdS92ojOyayIjygICUVTbcHJw2qIdfJawjoRSZSNLXvw==',
+  // Genie for AGTEK — 1-year KS, expires June 2027, geniegpcid:2071
+  genieKs: 'djJ8NjUxMDA5MnwzC5McOsnA88KfKuk-yMWgF7xPzW8r-NHL9OC3Ijz8VHM3Lh3bHOXui7jfJH8YVD_5zioQF189zX3lwohs_UCCO3yifeYS5AkQAFbSLGsJpZ7axnb37vIqEvSanrdD3U8jNOBf87OA2aHPjc6tcy_5gfVn4jKK5FgZamFR_6BXPA==',
   geniePartnerId: '6510092',
   playerPartnerId: '6510092',
   playerUiconfId: '57983212',
@@ -62,28 +62,28 @@ const KRE_DEFAULTS = {
   calendlyApiKey: 'eyJraWQiOiIxY2UxZTEzNjE3ZGNmNzY2YjNjZWJjY2Y4ZGM1YmFmYThhNjVlNjg0MDIzZjdjMzJiZTgzNDliMjM4MDEzNWI0IiwidHlwIjoiUEFUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2F1dGguY2FsZW5kbHkuY29tIiwiaWF0IjoxNzc2MzM0NTEwLCJqdGkiOiIwNTIzZmMyMi0yMDE2LTRjOGQtODM1My1kNmE0NTdiNzM5NzEiLCJ1c2VyX3V1aWQiOiIyZjEzYzQ3ZC1hOGQwLTRmZjUtOTg0NS1kYWIyZDcyY2UyMGIiLCJzY29wZSI6ImF2YWlsYWJpbGl0eTpyZWFkIGF2YWlsYWJpbGl0eTp3cml0ZSBldmVudF90eXBlczpyZWFkIGV2ZW50X3R5cGVzOndyaXRlIGxvY2F0aW9uczpyZWFkIHJvdXRpbmdfZm9ybXM6cmVhZCBzaGFyZXM6d3JpdGUgc2NoZWR1bGVkX2V2ZW50czpyZWFkIHNjaGVkdWxlZF9ldmVudHM6d3JpdGUgc2NoZWR1bGluZ19saW5rczp3cml0ZSBncm91cHM6cmVhZCBvcmdhbml6YXRpb25zOnJlYWQgb3JnYW5pemF0aW9uczp3cml0ZSB1c2VyczpyZWFkIGFjdGl2aXR5X2xvZzpyZWFkIGRhdGFfY29tcGxpYW5jZTp3cml0ZSBvdXRnb2luZ19jb21tdW5pY2F0aW9uczpyZWFkIHdlYmhvb2tzOnJlYWQgd2ViaG9va3M6d3JpdGUifQ.VQqsqMArHDpxI2AS2Sg6d2xvxz6VPTOR29UYLSuv8hCr8w2F9bCFHIC08CRDOEMkBaWgdZBqZuy2hQLW2adVjg',
   calendlyEventType: 'https://api.calendly.com/event_types/78f6c3cc-8499-40ba-b1ee-9b92d6a4f26b',
   // Branding — all user-facing copy
-  brandName:        'Kaltura',
-  headerTitle:      'Kaltura AI Assistant',
+  brandName:        'AGTEK',
+  headerTitle:      'AGTEK AI Assistant',
   headerStatus:     'Online · AI Assistant',
   welcomeHeading:   'Hi there!',
-  welcomeMessage:   'I\'m your Kaltura AI assistant. Ask me anything about our video platform, solutions, and capabilities.',
-  inputPlaceholder: 'Ask about Kaltura…',
-  footerText:       'Powered by <strong>Kaltura</strong>',
-  bookBtnLabel:     'Book a Meeting',
-  bookBtnSubtext:   'Schedule time with our team',
+  welcomeMessage:   'I\'m your AGTEK earthworks specialist. Ask me about Gradework, Highway, Reveal, Mobile Apps, or finding the right solution for your project.',
+  inputPlaceholder: 'Ask about AGTEK products…',
+  footerText:       'Powered by <strong>PathFactory</strong> + <strong>Kaltura AI</strong>',
+  bookBtnLabel:     'Talk to a Specialist',
+  bookBtnSubtext:   'Schedule with an AGTEK expert',
   avatarBtnLabel:   'Chat with virtual agent',
   avatarBtnSubtext: 'Start a voice conversation',
-  avatarViewTitle:  'Chat with Kaltura AI Avatar',
-  escalationText:   'It looks like you\'re seriously evaluating Kaltura. Would you like to take the next step?',
+  avatarViewTitle:  'Chat with AGTEK AI Agent',
+  escalationText:   'It looks like you\'re evaluating AGTEK solutions for a project. Would you like to connect with a product specialist?',
   escalationLabel:  'Ready for you',
-  starterQ1:        'How does Kaltura help with video marketing?',
-  starterQ2:        'What solutions does Kaltura offer for enterprise?',
-  starterQ3:        'Tell me about Kaltura\'s virtual events platform',
-  starterQ4:        'How can Kaltura help with education and e-learning?',
-  avatarChip1:      'Tell me about Kaltura\'s video platform',
-  avatarChip2:      'How can Kaltura help with events?',
-  avatarChip3:      'What makes Kaltura different?',
-  primaryColor:     '',  // empty = use default #006efa from CSS
+  starterQ1:        'What products does AGTEK offer for earthwork takeoffs?',
+  starterQ2:        'How does Gradework help me win more bids?',
+  starterQ3:        'What is Reveal and how does AI help my workflow?',
+  starterQ4:        'Tell me about AGTEK mobile apps for the field',
+  avatarChip1:      'Tell me about Gradework',
+  avatarChip2:      'How does Highway work for DOT projects?',
+  avatarChip3:      'What makes AGTEK different from other takeoff tools?',
+  primaryColor:     '#00a19a',
 };
 
 const SVG_CHAT = `<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>`;
@@ -877,13 +877,13 @@ export class KRERuntime {
     }
 
     const dpp = {
-      role: 'Micron AI Product Specialist',
-      context: `You are a friendly Micron AI product specialist embedded on micron.com. Your goal is to help engineers and IT buyers find the right Micron memory and storage products, answer technical questions, and guide interested prospects toward connecting with a Micron sales expert.`,
-      product: 'Micron Technology — leading manufacturer of DRAM, NAND flash, and storage solutions including HBM, DDR5, LPDDR, data center SSDs (9650, 7600, 6600 ION), and client SSDs (4600).',
+      role: 'AGTEK AI Product Specialist',
+      context: `You are a friendly AGTEK earthworks software specialist embedded on agtek.com. Your goal is to help contractors, estimators, and project managers find the right AGTEK products, answer technical questions, and guide interested prospects toward connecting with an AGTEK sales expert.`,
+      product: 'AGTEK — leading earthworks software for the construction industry. Products include Gradework (takeoff & estimating), Highway (DOT projects), Materials, Underground, Reveal (AI-powered), Trackwork (production management), and mobile apps (FieldView, SiteView, DroneView). Part of the Hexagon family.',
       instructions: [
         'Be conversational, warm, and concise.',
-        'Keep answers focused on Micron products, specs, and use cases.',
-        'If the visitor seems interested in pricing, samples, or evaluation, encourage them to book a meeting with a Micron specialist.',
+        'Keep answers focused on AGTEK products, workflows, and use cases.',
+        'If the visitor seems interested in pricing, demos, or evaluation, encourage them to book a meeting with an AGTEK specialist.',
         'Naturally collect lead information (name, company, role) when appropriate — one field at a time, never pushy.',
         'NEVER reference a company name from background data — only use company info the visitor has told you directly.',
       ],

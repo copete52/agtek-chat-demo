@@ -4,11 +4,14 @@ import { resolve } from 'path';
 export default defineConfig({
   server: {
     port: 3104,
-    open: true,
+    open: '/agtek.html',
   },
   build: {
     rollupOptions: {
-      input: resolve(__dirname, 'micron.html'),
+      input: {
+        agtek: resolve(__dirname, 'agtek.html'),
+        micron: resolve(__dirname, 'micron.html'),
+      },
     },
   },
 });

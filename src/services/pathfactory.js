@@ -15,14 +15,14 @@ const DEFAULTS = {
 };
 */
 
-// Micron demo content
+// AgTek demo content
 const DEFAULTS = {
   baseUrl:       'https://jukebox.pathfactory.com/api/public/v3/cf_headless',
-  clientId:      'LB-D286F944-11192',
-  orgId:         'ddf8afdc-c7cf-4c7c-a4b5-ef9b4255eee4',
-  contentPoolId: '9a53208c-e13c-4ec7-ac5b-6c4dba1b9dd5',
-  contextUuid:   'cc21e804-2521-4223-a244-45d591f6f03a',
-  cfBaseUrl:     'https://micron.pathfactory.com',
+  clientId:      'LB-8E64A905-11259',
+  orgId:         '9e6e862a-8610-48d3-b505-00a312a4b70e',
+  contentPoolId: 'c536c025-8ef3-4a2a-8f3a-1c08c84e6a2',
+  contextUuid:   '55c8cc56-6df8-45db-94c6-24a0bc3d30b2',
+  cfBaseUrl:     'https://demo2026.pathfactory.com',
 };
 
 
