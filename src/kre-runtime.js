@@ -792,7 +792,7 @@ export class KRERuntime {
     if (this._avatar) this._avatar.destroy();
     this._avatar = new AvatarService(this._avatarConfig);
     this._avatar.setDPPContext(dppContext);
-    this._avatar.init(fullMount, (event, data) => {
+    this._avatar.init(fullMount, async (event, data) => {
       this._emit(`kre:${event}`, data);
 
       if (event === 'avatar:ready') {
@@ -811,9 +811,10 @@ export class KRERuntime {
           transcript.innerHTML += `<div class="kre-avatar-tline kre-avatar-tline--bot"><span class="kre-avatar-tline__label">AI Avatar</span>${this._esc(data.text)}</div>`;
           transcript.scrollTop = transcript.scrollHeight;
         }
-        // Run signal detection on avatar responses for intent scoring
+        // Store avatar text so user's next turn can pass it to Groq as context
         if (data?.text) {
-          this._detectAvatarSignals(data.text, 'avatar');
+          this._lastAvatarText = data.text;
+          await this._detectAvatarSignals(data.text, 'avatar');
         }
         // Update status
         const status = this._root.querySelector('#kre-avatar-status');
@@ -840,9 +841,9 @@ export class KRERuntime {
           this._turnCount++;
           this._queries.push(data.text);
         }
-        // Run signal detection on user speech
+        // Run signal detection + Groq enrichment on user speech
         if (data?.text) {
-          this._detectAvatarSignals(data.text, 'user');
+          await this._detectAvatarSignals(data.text, 'user');
         }
       }
 
@@ -921,9 +922,9 @@ export class KRERuntime {
 
   /**
    * Run buying-signal detection on avatar conversation text (user or avatar speech).
-   * Updates intent scoring and live data without Groq enrichment.
+   * On user turns, enriches via Groq for lead capture and real intent scoring.
    */
-  _detectAvatarSignals(text, speaker) {
+  async _detectAvatarSignals(text, speaker) {
     const { boost: keywordBoost, signals, categories, negativeBoost } = detectBuyingSignals(text);
     if (signals.length) {
       this._detectedSignals.push(...categories.filter(s => !this._detectedSignals.includes(s)));
@@ -934,16 +935,31 @@ export class KRERuntime {
     this._allCategories.push(...categories.filter(c => !this._allCategories.includes(c)));
     if (keywordBoost > 0) this._boostHistory.push({ turn: this._turnCount, boost: keywordBoost });
 
-    // Compute engagement without Groq (keyword + PF only)
-    const _scoringInput = {
+    let groqIntent = null;
+
+    if (speaker === 'user' && this._enrichment?.enabled) {
+      try {
+        const { lead, intentScore } = await this._enrichment.enrich(text, this._lastAvatarText || '');
+        groqIntent = intentScore;
+        this._emit('kre:lead:updated', lead);
+        if (groqIntent?.categories?.length) {
+          const groqCats = groqIntent.categories;
+          this._allCategories.push(...groqCats.filter(c => !this._allCategories.includes(c)));
+          this._detectedSignals.push(...groqCats.filter(s => !this._detectedSignals.includes(s)));
+        }
+      } catch (err) {
+        console.warn('[KRE] Avatar Groq enrichment failed, falling back to keyword scoring', err);
+      }
+    }
+
+    this._engagement = computeEngagement({
       pfScore: 0,
-      groqIntent: null,
+      groqIntent,
       currentBoost: keywordBoost,
       negativeBoost,
       turnHistory: this._boostHistory,
       turnCount: this._turnCount,
-    };
-    this._engagement = computeEngagement(_scoringInput);
+    });
     this._intentLevel = getIntentLevel(this._engagement);
 
     this._intentLog.push({
@@ -951,15 +967,15 @@ export class KRERuntime {
       ts: Date.now(),
       engagement: this._engagement,
       level: this._intentLevel,
-      groqScore: null,
-      groqLevel: null,
-      groqConf: null,
-      groqNeg: null,
+      groqScore: groqIntent?.score ?? null,
+      groqLevel: groqIntent?.level ?? null,
+      groqConf: groqIntent?.confidence ?? null,
+      groqNeg: groqIntent?.negative ?? null,
       pfScore: 0,
       kwBoost: keywordBoost,
       negBoost: negativeBoost,
       signals: [...this._detectedSignals],
-      reasoning: `Avatar mode — ${speaker} signal detection`,
+      reasoning: groqIntent?.reasoning || `Avatar mode — ${speaker} signal detection`,
     });
     this._emit('kre:livedata', this.getLiveData());
     this._updateAvatarCta();
@@ -970,7 +986,7 @@ export class KRERuntime {
    * Injects the text into the SDK's conversation via injectPrompt().
    * The avatar AI handles the response natively.
    */
-  _sendFromAvatarFull() {
+  async _sendFromAvatarFull() {
     const input = this._root.querySelector('.kre-input');
     if (!input) return;
     const text = input.value.trim();
@@ -989,8 +1005,8 @@ export class KRERuntime {
     this._queries.push(text);
     this._messages.push({ role: 'user', html: this._esc(text) });
 
-    // Run signal detection for intent scoring
-    this._detectAvatarSignals(text, 'user');
+    // Run signal detection + Groq enrichment for intent scoring
+    await this._detectAvatarSignals(text, 'user');
 
     // Inject prompt into the SDK — avatar handles the rest
     if (this._avatar) {
@@ -1109,7 +1125,7 @@ export class KRERuntime {
     this._avatar = new AvatarService(this._avatarConfig);
     this._avatar.setDPPContext(dppContext);
     if (chatHistory) this._avatar.setChatHistory(chatHistory);
-    this._avatar.init(fullMount, (event, data) => {
+    this._avatar.init(fullMount, async (event, data) => {
       this._emit(`kre:${event}`, data);
 
       if (event === 'avatar:ready') {
@@ -1123,7 +1139,8 @@ export class KRERuntime {
 
       if (event === 'avatar:spoke') {
         if (data?.text) {
-          this._detectAvatarSignals(data.text, 'avatar');
+          this._lastAvatarText = data.text;
+          await this._detectAvatarSignals(data.text, 'avatar');
           this._messages.push({ role: 'bot', source: 'enriched', html: this._esc(data.text) });
           this._renderMessages();
         }
@@ -1147,7 +1164,7 @@ export class KRERuntime {
           this._turnCount++;
           this._queries.push(data.text);
           this._messages.push({ role: 'user', html: this._esc(data.text) });
-          this._detectAvatarSignals(data.text, 'user');
+          await this._detectAvatarSignals(data.text, 'user');
           this._renderMessages();
         }
       }
