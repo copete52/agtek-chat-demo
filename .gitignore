@@ -5,6 +5,10 @@ dist/
 
 # Claude settings
 .claude/
+CLAUDE.local.md
+
+# Joerg's reference build — not the active codebase
+Agtek/
 
 # HPE reference files — not for deployment
 index.html

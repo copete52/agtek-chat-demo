@@ -19,6 +19,7 @@ import { GroqEnrichmentService } from './services/groq.js';
 import { GenieSearchService } from './services/genie.js';
 import { KRE_CSS_VARS } from './styles/kre-theme.js';
 import WIDGET_CSS from './styles/widget.css?raw';
+import ADMIN_CSS from './styles/admin.css?raw';
 
 // ── TODO: Remove once competitor widget is removed from host page ──
 (function() {
@@ -39,7 +40,7 @@ const KRE_DEFAULTS = {
   // Version
   kreVersion: '0.6.0',
   // Groq enrichment
-  groqApiKey: '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',
+  groqApiKey: import.meta.env.VITE_GROQ_API_KEY || '',
   // Avatar (Kaltura Avatar SDK — clientId + flowId auth, no KS needed)
   avatarClientId: '6931df33dd072609137dfe46',
   avatarFlowId: 'agent-43',
@@ -463,6 +464,13 @@ export class KRERuntime {
       document.head.appendChild(style);
     }
 
+    if (!document.getElementById('kre-admin-css')) {
+      const style = document.createElement('style');
+      style.id = 'kre-admin-css';
+      style.textContent = ADMIN_CSS;
+      document.head.appendChild(style);
+    }
+
     // Apply primary color override if set
     if (this._settings.primaryColor) {
       const colorStyle = document.createElement('style');
@@ -569,7 +577,7 @@ export class KRERuntime {
         <div class="kre-header">
           <button class="kre-header__back" aria-label="Back to chat" hidden>${SVG_BACK}</button>
           <div class="kre-header__avatar">
-            <img src="https://assets.micron.com/adobe/assets/urn:aaid:aem:bbc82cff-27c5-4e1c-9c01-cd41034a38d5/as/icon-footer-micron-m.png?preferwebp=true" alt="Micron" width="36" height="36" style="border-radius:50%;object-fit:contain;background:#000;padding:4px;" />
+            <img src="/images/logosmall.png" alt="AGTEK" width="36" height="36" style="border-radius:50%;object-fit:contain;background:#fff;padding:4px;" />
           </div>
           <div class="kre-header__info">
             <h3>${this._esc(this._settings.headerTitle)}</h3>

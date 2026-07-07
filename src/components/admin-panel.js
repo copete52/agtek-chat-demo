@@ -7,7 +7,7 @@
 export class AdminPanel {
   constructor(config = {}) {
     this.container = null;
-    this._activeTab = 'kb';
+    this._activeTab = 'live';
     this._visible = false;
     this._liveData = config.liveData || {}; // real-time widget data
     this._settings = config.settings || {};  // branding config from runtime
@@ -15,7 +15,7 @@ export class AdminPanel {
 
   mount(container) {
     this.container = container;
-    this._render();
+    this.container.style.display = 'none';
   }
 
   toggle() {
@@ -42,6 +42,7 @@ export class AdminPanel {
           <button class="admin-close" aria-label="Close admin panel">&times;</button>
         </div>
         <div class="admin-tabs">
+          <button class="admin-tab ${this._activeTab === 'live' ? 'admin-tab--active' : ''}" data-tab="live">Live</button>
           <button class="admin-tab ${this._activeTab === 'kb' ? 'admin-tab--active' : ''}" data-tab="kb">Knowledge Base</button>
           <button class="admin-tab ${this._activeTab === 'routing' ? 'admin-tab--active' : ''}" data-tab="routing">Routing Rules</button>
           <button class="admin-tab ${this._activeTab === 'integrations' ? 'admin-tab--active' : ''}" data-tab="integrations">Integrations</button>
@@ -72,12 +73,92 @@ export class AdminPanel {
     if (!el) return;
 
     switch (this._activeTab) {
+      case 'live': el.innerHTML = this._renderLive(); break;
       case 'kb': el.innerHTML = this._renderKB(); break;
       case 'routing': el.innerHTML = this._renderRouting(); break;
       case 'integrations': el.innerHTML = this._renderIntegrations(); break;
       case 'avatar': el.innerHTML = this._renderAvatar(); break;
       case 'branding': el.innerHTML = this._renderBranding(); break;
     }
+  }
+
+  _renderLive() {
+    const lead = this._liveData.lead || {};
+    const score = this._liveData.engagementScore || 0;
+    const intent = this._liveData.intentLevel || 'Exploring';
+    const turns = this._liveData.turnCount || 0;
+    const groq = this._liveData.groqIntent || null;
+    const enriched = this._liveData.enrichmentEnabled;
+    const queries = this._liveData.queries || [];
+    const signals = this._liveData.detectedSignals || [];
+
+    const fullName = [lead.firstName, lead.lastName].filter(Boolean).join(' ') || null;
+
+    const fieldRow = (label, value) => {
+      const filled = value && value !== 'null';
+      const display = filled ? this._esc(value) : '<span style="color:#888;font-style:italic;">not yet captured</span>';
+      const dot = filled ? '🟢' : '⬜';
+      return `<tr><td>${dot} <strong>${label}</strong></td><td>${display}</td></tr>`;
+    };
+
+    return `
+      <div class="admin-section">
+        <h3>Live Session</h3>
+        <p class="admin-desc">Real-time lead capture and intent scoring from the active conversation.</p>
+
+        <div class="admin-cards">
+          <div class="admin-stat-card">
+            <div class="admin-stat-value">${Math.round(score * 100)}%</div>
+            <div class="admin-stat-label">Engagement</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-value">${intent}</div>
+            <div class="admin-stat-label">Intent Level</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-value">${turns}</div>
+            <div class="admin-stat-label">Turns</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-value admin-stat-value--${enriched ? 'green' : 'yellow'}">${enriched ? 'Active' : 'Fallback'}</div>
+            <div class="admin-stat-label">Groq LLM</div>
+          </div>
+        </div>
+
+        <h4>Lead Capture Progress</h4>
+        <table class="admin-table admin-table--compact">
+          <tbody>
+            ${fieldRow('Name', fullName)}
+            ${fieldRow('Email', lead.email)}
+            ${fieldRow('Company', lead.company)}
+            ${fieldRow('Role', lead.role)}
+          </tbody>
+        </table>
+
+        ${groq ? `
+        <h4 style="margin-top:20px;">Groq Intent Analysis</h4>
+        <table class="admin-table admin-table--compact">
+          <tbody>
+            <tr><td><strong>Score</strong></td><td>${Math.round((groq.score || 0) * 100)}% (confidence: ${Math.round((groq.confidence || 0) * 100)}%)</td></tr>
+            <tr><td><strong>Level</strong></td><td>${groq.level || '—'}</td></tr>
+            <tr><td><strong>Reasoning</strong></td><td>${this._esc(groq.reasoning || '—')}</td></tr>
+            <tr><td><strong>Categories</strong></td><td>${(groq.categories || []).join(', ') || '—'}</td></tr>
+          </tbody>
+        </table>` : ''}
+
+        ${queries.length ? `
+        <h4 style="margin-top:20px;">Recent Queries</h4>
+        <div class="admin-query-log">
+          ${queries.map(q => `<div class="admin-query-item"><span class="admin-query-icon">Q</span> ${this._esc(q)}</div>`).join('')}
+        </div>` : ''}
+
+        ${signals.length ? `
+        <h4 style="margin-top:20px;">Detected Signals</h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+          ${signals.map(s => `<span class="admin-badge admin-badge--blue">${this._esc(s)}</span>`).join('')}
+        </div>` : ''}
+      </div>
+    `;
   }
 
   _renderKB() {
@@ -88,7 +169,7 @@ export class AdminPanel {
 
         <div class="admin-cards">
           <div class="admin-stat-card">
-            <div class="admin-stat-value">corp.kaltura.com</div>
+            <div class="admin-stat-value">agtek.com</div>
             <div class="admin-stat-label">Source Domain</div>
           </div>
           <div class="admin-stat-card">
@@ -120,7 +201,7 @@ export class AdminPanel {
 
         <h4>Recent Queries</h4>
         <div class="admin-query-log">
-          ${(this._liveData.queries || ['How does Kaltura help with video marketing?', 'What solutions for enterprise?']).map(q =>
+          ${(this._liveData.queries || ['How does Gradework handle 3D earthwork takeoff?', 'What drone integration does AGTEK support?']).map(q =>
             `<div class="admin-query-item"><span class="admin-query-icon">Q</span> ${this._esc(q)}</div>`
           ).join('')}
         </div>
@@ -186,7 +267,7 @@ export class AdminPanel {
               <span class="admin-flow__branch-icon">🤖</span>
               <div>
                 <strong>AI Avatar</strong>
-                <p>Live conversation with Kaltura AI</p>
+                <p>Live conversation with AGTEK AI Avatar</p>
               </div>
             </div>
             <div class="admin-flow__branch-item">
@@ -299,13 +380,25 @@ export class AdminPanel {
           </div>
           <table class="admin-table admin-table--compact">
             <tbody>
-              <tr><td><strong>Name</strong></td><td>${this._liveData.visitorName || 'Website Visitor'}</td></tr>
-              <tr><td><strong>Company</strong></td><td>${this._liveData.visitorCompany || 'Amdocs'}</td></tr>
-              <tr><td><strong>Source</strong></td><td>KRE AI SDR Widget</td></tr>
-              <tr><td><strong>Lead Score</strong></td><td>${Math.round((this._liveData.engagementScore || 0.45) * 100)}</td></tr>
-              <tr><td><strong>Intent</strong></td><td>${this._liveData.intentLevel || 'Evaluating'}</td></tr>
-              <tr><td><strong>Topics</strong></td><td>${(this._liveData.queries || ['Video marketing', 'Enterprise solutions']).join(', ')}</td></tr>
-              <tr><td><strong>Status</strong></td><td>Marketing Qualified Lead (MQL)</td></tr>
+              ${(() => {
+                const l = this._liveData.lead || {};
+                const name = [l.firstName, l.lastName].filter(Boolean).join(' ') || 'Website Visitor';
+                const company = l.company || '—';
+                const email = l.email || '—';
+                const role = l.role || '—';
+                const topics = (this._liveData.queries || []).join(', ') || '—';
+                return `
+                  <tr><td><strong>Name</strong></td><td>${this._esc(name)}</td></tr>
+                  <tr><td><strong>Email</strong></td><td>${this._esc(email)}</td></tr>
+                  <tr><td><strong>Company</strong></td><td>${this._esc(company)}</td></tr>
+                  <tr><td><strong>Role</strong></td><td>${this._esc(role)}</td></tr>
+                  <tr><td><strong>Source</strong></td><td>KRE AI SDR Widget</td></tr>
+                  <tr><td><strong>Lead Score</strong></td><td>${Math.round((this._liveData.engagementScore || 0) * 100)}</td></tr>
+                  <tr><td><strong>Intent</strong></td><td>${this._liveData.intentLevel || 'Exploring'}</td></tr>
+                  <tr><td><strong>Topics</strong></td><td>${this._esc(topics)}</td></tr>
+                  <tr><td><strong>Status</strong></td><td>Marketing Qualified Lead (MQL)</td></tr>
+                `;
+              })()}
             </tbody>
           </table>
         </div>
@@ -325,7 +418,7 @@ export class AdminPanel {
             <div class="admin-stat-label">Avatar Status</div>
           </div>
           <div class="admin-stat-card">
-            <div class="admin-stat-value">53022</div>
+            <div class="admin-stat-value">6510092</div>
             <div class="admin-stat-label">Partner ID</div>
           </div>
           <div class="admin-stat-card">
@@ -336,16 +429,17 @@ export class AdminPanel {
 
         <h4>Persona Prompt</h4>
         <div class="admin-code-block">
-          <pre>You are a Kaltura AI Sales Assistant. You help website visitors
-understand Kaltura's video platform solutions. Be conversational,
-knowledgeable, and helpful. Focus on understanding their needs
-and matching them with the right Kaltura solution.
+          <pre>You are an AGTEK AI Sales Assistant. You help website visitors
+understand AGTEK's earthwork takeoff and construction management
+software. Be conversational, knowledgeable, and helpful. Focus
+on understanding their project type and recommending the right
+AGTEK solution.
 
 Key behaviors:
-- Ask clarifying questions about their use case
-- Reference specific Kaltura capabilities relevant to their needs
-- Offer to book a meeting when the visitor seems ready
-- Maintain a professional but friendly tone</pre>
+- Ask clarifying questions about their project type (grading, highway, drone survey)
+- Reference specific AGTEK products relevant to their needs (Gradework, Highway, Reveal, Trackwork)
+- Offer to book a demo when the visitor seems ready
+- Maintain a professional but approachable tone</pre>
         </div>
 
         <h4>Dynamic Page Prompt (DPP)</h4>
@@ -353,7 +447,7 @@ Key behaviors:
         <table class="admin-table">
           <thead><tr><th>DPP Field</th><th>Source</th><th>Example</th></tr></thead>
           <tbody>
-            <tr><td>Visitor Questions</td><td>Chat history</td><td>"video marketing, enterprise solutions"</td></tr>
+            <tr><td>Visitor Questions</td><td>Chat history</td><td>"earthwork takeoff, GPS machine control"</td></tr>
             <tr><td>Intent Level</td><td>PathFactory intent signal</td><td>"High Intent"</td></tr>
             <tr><td>Engagement Score</td><td>PathFactory engagement</td><td>"78%"</td></tr>
             <tr><td>Content Viewed</td><td>Recommendation clicks</td><td>"3 product pages"</td></tr>
