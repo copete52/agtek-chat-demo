@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/micron.html" }
+    { "source": "/", "destination": "/agtek.html" }
   ]
 }
