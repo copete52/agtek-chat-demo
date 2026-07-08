@@ -70,7 +70,7 @@ const KRE_DEFAULTS = {
   welcomeMessage:   'I\'m your AGTEK earthworks specialist. Ask me about Gradework, Highway, Reveal, Mobile Apps, or finding the right solution for your project.',
   inputPlaceholder: 'Ask about AGTEK products…',
   footerText:       'Powered by <strong>PathFactory</strong> + <strong>Kaltura AI</strong>',
-  bookBtnLabel:     'Talk to a Specialist',
+  bookBtnLabel:     'Book a Demo',
   bookBtnSubtext:   'Schedule with an AGTEK expert',
   avatarBtnLabel:   'Chat with virtual agent',
   avatarBtnSubtext: 'Start a voice conversation',
@@ -1300,13 +1300,6 @@ export class KRERuntime {
               <small>${this._esc(this._settings.avatarBtnSubtext)}</small>
             </span>
           </button>
-          <button class="kre-welcome-booking">
-            <span class="kre-welcome-booking__icon">📅</span>
-            <span class="kre-welcome-booking__text">
-              <strong>${this._esc(this._settings.bookBtnLabel)}</strong>
-              <small>${this._esc(this._settings.bookBtnSubtext)}</small>
-            </span>
-          </button>
         </div>
         <div class="kre-starters">
           ${[this._settings.starterQ1, this._settings.starterQ2, this._settings.starterQ3, this._settings.starterQ4].filter(Boolean).map((q) => `<button class="kre-starter">${this._esc(q)}</button>`).join('')}
@@ -1318,9 +1311,6 @@ export class KRERuntime {
     });
     el.querySelector('.kre-welcome-avatar')?.addEventListener('click', () => {
       this._showAvatarOverlay();
-    });
-    el.querySelector('.kre-welcome-booking')?.addEventListener('click', () => {
-      this._switchMode('booking');
     });
   }
 
